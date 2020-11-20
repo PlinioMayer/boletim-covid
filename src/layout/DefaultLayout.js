@@ -14,8 +14,8 @@ import {
 import clsx from 'clsx';
 import { makeStyles, styled } from '@material-ui/core/styles';
 import {
-  Inbox as InboxIcon,
-  Mail as MailIcon
+  House as HouseIcon,
+  LocationCity as LocationCityIcon
 } from '@material-ui/icons';
 import { UnstyledLink } from '../components';
 
@@ -32,7 +32,11 @@ const DrawerTitle = styled('div')(({ theme }) => ({
 const DefaultContainer = styled(Container)(({ theme }) => ({
   flex: 1,
   paddingLeft: theme.spacing(7),
-  paddingTop: 64
+  paddingTop: 64,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: theme.palette.grey[200]
 }))
 
 const useStyles = makeStyles((theme) => ({
@@ -136,11 +140,22 @@ export default function MiniDrawer(props) {
         </DrawerTitle>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <UnstyledLink to="/teste">
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
+          {[
+            {
+              text: 'Estados',
+              icon: <LocationCityIcon />,
+              url: '/estados'
+            },
+            {
+              text: 'Cidades',
+              icon: <HouseIcon />,
+              url: '/cidades'
+            }
+          ].map(elem => (
+            <UnstyledLink to={elem.url}>
+              <ListItem button key={elem.text}>
+                <ListItemIcon>{elem.icon}</ListItemIcon>
+                <ListItemText primary={elem.text} />
               </ListItem>
             </UnstyledLink>
           ))}
