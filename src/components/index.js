@@ -1,4 +1,4 @@
-import Drawer from './Drawer';
+import Table from './Table';
 import UnstyledLink from './UnstyledLink';
 
-export { Drawer, UnstyledLink };
+export { UnstyledLink, Table };

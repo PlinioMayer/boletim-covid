@@ -3,8 +3,8 @@ import { styled } from '@material-ui/core/styles';
 
 const FullContainer = styled(Container)( ({ theme }) => ({
   flex: 1,
-  paddingTop: 128,
-  paddingLeft: theme.spacing(8)
+  paddingTop: theme.spacing(8),
+  paddingLeft: theme.spacing(4)
 }));
 
 

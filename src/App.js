@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 
 import Home from './views/Home';
-import { Drawer } from './components';
+import { DefaultLayout } from './layout';
 
 function Teste () {
   return <div style={{ width: 800, height: 800, background: 'red', color: 'white', textAlign: 'center', display: 'table-cell', verticalAlign: 'middle' }}>
@@ -16,15 +16,16 @@ function Teste () {
 function App() {
   return (
     <Router>
-      <Drawer />
-      <Switch>
-      <Route path="/teste">
-          <Teste />
-        </Route>
-        <Route path="/">
-          <Home />
-        </Route>
-      </Switch>
+      <DefaultLayout>
+        <Switch>
+          <Route path="/teste">
+            <Teste />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </DefaultLayout>
     </Router>
   );
 }
