@@ -1,4 +1,5 @@
 import Table from './Table';
 import UnstyledLink from './UnstyledLink';
+import Modal from './Modal';
 
-export { UnstyledLink, Table };
+export { UnstyledLink, Table, Modal };

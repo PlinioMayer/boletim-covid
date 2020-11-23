@@ -14,10 +14,12 @@ import {
 import clsx from 'clsx';
 import { makeStyles, styled } from '@material-ui/core/styles';
 import {
-  House as HouseIcon,
-  LocationCity as LocationCityIcon
+  Home as HomeIcon,
+  Flag as FlagIcon,
+  Room as RoomIcon,
+  Warning as WarningIcon
 } from '@material-ui/icons';
-import { UnstyledLink } from '../components';
+import { UnstyledLink } from 'components';
 
 const drawerWidth = 240;
 
@@ -33,9 +35,6 @@ const DefaultContainer = styled(Container)(({ theme }) => ({
   flex: 1,
   paddingLeft: theme.spacing(7),
   paddingTop: 64,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
   backgroundColor: theme.palette.grey[200]
 }))
 
@@ -114,9 +113,11 @@ export default function MiniDrawer(props) {
         })}
       >
         <Toolbar>
-          <Typography variant="h6" noWrap>
-            Mini variant drawer
-          </Typography>
+          <UnstyledLink to="/">
+            <Typography variant="h6" noWrap>
+              Boletim Covid
+            </Typography>
+          </UnstyledLink>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -142,17 +143,27 @@ export default function MiniDrawer(props) {
         <List>
           {[
             {
+              text: 'Início',
+              icon: <HomeIcon />,
+              url: '/'
+            },
+            {
               text: 'Estados',
-              icon: <LocationCityIcon />,
+              icon: <FlagIcon />,
               url: '/estados'
             },
             {
               text: 'Cidades',
-              icon: <HouseIcon />,
+              icon: <RoomIcon />,
               url: '/cidades'
+            },
+            {
+              text: 'Grupos de Risco',
+              icon: <WarningIcon />,
+              url: '/grupos-de-risco'
             }
           ].map(elem => (
-            <UnstyledLink to={elem.url}>
+            <UnstyledLink key={elem.url} to={elem.url}>
               <ListItem button key={elem.text}>
                 <ListItemIcon>{elem.icon}</ListItemIcon>
                 <ListItemText primary={elem.text} />
@@ -161,7 +172,7 @@ export default function MiniDrawer(props) {
           ))}
         </List>
       </Drawer>
-      <DefaultContainer component="main" maxWidth="lg">
+      <DefaultContainer component="main">
         {props.children}
       </DefaultContainer>
     </>

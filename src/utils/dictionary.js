@@ -1,8 +1,9 @@
 
 const dictionary =  {
-  name: 'nome',
-  population: 'população',
-  region: 'região'
+  name: 'Nome',
+  population: 'População',
+  region: 'Região',
+  state: 'Estado',
 };
 
 export default dictionary;
