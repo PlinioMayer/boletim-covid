@@ -4,6 +4,16 @@ function handleByValue(handler) {
   }
 }
 
+function toggleReducer(state) {
+  return !state;
+}
+
+function reducer(state, action) {
+  return action;
+}
+
 export {
-  handleByValue
+  handleByValue,
+  toggleReducer,
+  reducer
 }

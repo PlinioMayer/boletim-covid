@@ -91,7 +91,7 @@ const RiskGroupsForm = ({ entity }) => {
   return (
     <>
       <Toolbar className={classes.topToolbar}>
-        <Typography variant="subtitle1">Criar novo Estado</Typography>
+        <Typography variant="subtitle1">{ !entity ?  'Criar novo' : 'Atualizar' } Grupo de Risco</Typography>
       </Toolbar>
       <Box className={classes.box}>
         <TextField

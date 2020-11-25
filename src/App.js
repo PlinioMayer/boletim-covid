@@ -6,8 +6,8 @@ import {
 
 import { Home, RegisterList } from './views';
 import { DefaultLayout } from './layout';
-import { StatesForm, CitiesForm, RiskGroupsForm } from 'components/forms';
-import { states, cities, riskGroups } from 'utils/mock';
+import { StatesForm, CitiesForm, RiskGroupsForm, PeopleForm } from 'components/forms';
+import { states, cities, riskGroups, people } from 'utils/mock';
 
 const statesHeaders = [
   'name', 'population', 'region'
@@ -20,6 +20,22 @@ const citiesHeaders = [
 const riskGroupHeaders = [
   'name'
 ]
+
+const peopleHeaders = [
+  'cpf', 'name', 'case', 'birthdate', 'gender'
+]
+
+const peopleConverters = {
+  birthdate: (value) => {
+    if (typeof value !== 'string') {
+      return value;
+    }
+
+    console.log(value);
+
+    return value.split('-').reverse().join('/');
+  }
+}
 
 function App() {
   return (
@@ -57,6 +73,17 @@ function App() {
               title="Grupos de Risco"
               form={ RiskGroupsForm }
               baseUrl="risk_groups"
+            />
+          </Route>
+
+          <Route path="/pessoas">
+            <RegisterList
+              headers={peopleHeaders}
+              entities={people}
+              title="Pessoas"
+              form={ PeopleForm }
+              baseUrl="people"
+              converters={peopleConverters}
             />
           </Route>
           

@@ -1,8 +1,14 @@
 import React, { useReducer } from 'react';
-import { TextField, Toolbar, Typography, Box, Button} from '@material-ui/core';
+import {
+  TextField,
+  Toolbar,
+  Typography,
+  Box,
+  Button
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { handleByValue } from 'utils/common';
-import { onlyNumbers, notNull } from 'utils/validators'
+import { onlyNumbers, notNull } from 'utils/validators';
 
 const useStyles = makeStyles(theme => ({
   inputs: {
@@ -22,45 +28,27 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'right',
     padding: 0
+  },
+  phoneToolbar: {
+    display: 'flex',
+    justifyContent: 'right'
+  },
+  telefonesOuterContainer: {
+    width: '100%',
+    marginTop: theme.spacing(2)
+  },
+  telefonesInnerContainer: {
+    maxHeight: '10vw',
+    overflow: 'auto',
+    width: '100%'
   }
 }));
 
-const stateReducer = (state, action) => {
-  switch (action.type) {
-    case 'name':
-      return {
-        ...state,
-        name: action.value
-      };
+const objReducer = (state, action) => {
+  const obj = { ...state };
+  obj[action.type] = action.value;
 
-    case 'population':
-      return {
-        ...state,
-        population: action.value
-      };
-
-    default:
-      return state;
-  }
-}
-
-const errorsReducer = (state, action) => {
-  switch (action.type) {
-    case 'name':
-      return {
-        ...state,
-        name: action.value
-      };
-
-    case 'population':
-      return {
-        ...state,
-        population: action.value
-      };
-
-    default:
-      return state;
-  }
+  return obj;
 }
 
 const sendRequest = (entity, errorsDispatch) => {
@@ -72,11 +60,21 @@ const sendRequest = (entity, errorsDispatch) => {
     error = true;
   }
 
-  if (!notNull(entity.population)) {
-    errorsDispatch({ type: 'population', value: { message: 'População não pode estar vazia' } });
+  if (!notNull(entity.cpf)) {
+    errorsDispatch({ type: 'cpf', value: { message: 'CPF não pode estar vazio' } });
     error = true;
-  } else if (!onlyNumbers(entity.population)) {
-    errorsDispatch({ type: 'population', value: { message: 'População pode conter apenas números' } });
+  } else if (!onlyNumbers(entity.cpf)) {
+    errorsDispatch({ type: 'cpf', value: { message: 'CPF pode conter apenas números' } });
+    error = true;
+  }
+
+  if (!notNull(entity.gender)) {
+    errorsDispatch({ type: 'gender', value: { message: 'Gênero não pode estar vazio' } });
+    error = true;
+  }
+
+  if (!notNull(entity.birthdate)) {
+    errorsDispatch({ type: 'birthdate', value: { message: 'Data de nascimento não pode estar vazia' } });
     error = true;
   }
 
@@ -87,7 +85,9 @@ const sendRequest = (entity, errorsDispatch) => {
 
 const initialErrorsState = {
   name: null,
-  population: null
+  cpf: null,
+  gender: null,
+  birthdate: null
 }
 
 const StatesForm = ({ entity }) => {
@@ -96,16 +96,19 @@ const StatesForm = ({ entity }) => {
   const initialEntityState = entity ? {
     id: entity.id,
     name: entity.name,
-    population: entity.population,
-    state_id: entity.state_id
+    cpf: entity.cpf,
+    gender: entity.gender,
+    birthdate: entity.birthdate
   } : {
+    id: '',
     name: '',
-    population: '',
-    state_id: ''
+    cpf: '',
+    gender: '',
+    birthdate: ''
   }
 
-  const [entityState, entityDispatch] = useReducer(stateReducer, initialEntityState);
-  const [errorsState, errorsDispatch] = useReducer(errorsReducer, initialErrorsState);
+  const [entityState, entityDispatch] = useReducer(objReducer, initialEntityState);
+  const [errorsState, errorsDispatch] = useReducer(objReducer, initialErrorsState);
 
   const handleChange = (type, value) => {
     entityDispatch({ type, value });
@@ -115,7 +118,7 @@ const StatesForm = ({ entity }) => {
   return (
     <>
       <Toolbar className={classes.topToolbar}>
-        <Typography variant="subtitle1">{ !entity ?  'Criar novo' : 'Atualizar' } Estado</Typography>
+        <Typography variant="subtitle1">Criar novo Estado</Typography>
       </Toolbar>
       <Box className={classes.box}>
         <TextField
@@ -140,6 +143,8 @@ const StatesForm = ({ entity }) => {
           error={errorsState.population ? true : false}
           helperText={errorsState.population ? errorsState.population.message : ''}
         />
+
+       
       </Box>
       <Toolbar className={classes.bottomToolbar}>
         <Button onClick={() => sendRequest(entityState, errorsDispatch)} variant="contained" color="primary">ENVIAR</Button>

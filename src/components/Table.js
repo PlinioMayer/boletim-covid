@@ -22,9 +22,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const BaseTable = ({ headers, entities, pageState, rowsState, showUpdateModal }) => {
+const BaseTable = ({ headers, entities, pageState, rowsState, showUpdateModal, converters }) => {
   const classes = useStyles();
-
+  const innerConverters = converters ? converters : {};
+  console.log(converters, innerConverters)
   return (
       <TableContainer className={classes.root}>
         <Table stickyHeader>
@@ -45,7 +46,7 @@ const BaseTable = ({ headers, entities, pageState, rowsState, showUpdateModal })
                 { 
                   headers.slice(1)
                     .map(elem => (
-                      <TableCell key={elem} align="right">{entity[elem]}</TableCell>
+                      <TableCell key={elem} align="right">{innerConverters[elem] ? innerConverters[elem](entity[elem]) : entity[elem]}</TableCell>
                     ))
                 }
               </TableRow>

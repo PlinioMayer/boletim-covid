@@ -310,4 +310,49 @@ const riskGroups = [
   }
 ]
 
-export { states, cities, riskGroups };
+const people = [
+  {
+    cpf: "02401415229",
+    name: "Luís Augusto Moreira",
+    gender: "MASCULINO",
+    birthdate: "01-05-1995",
+    case: 'Óbito'
+  },
+  {
+    cpf: "05423459143",
+    name: "Marcelo Figueiredo",
+    gender: "MASCULINO",
+    birthdate: "15-06-1989",
+    case: 'Óbito'
+  },
+  {
+    cpf: "88987616172",
+    name: "Maria Antônia da Silva",
+    gender: "FEMININO",
+    birthdate: "04-01-2004",
+    case: 'Óbito'
+  },
+  {
+    cpf: "03857462838",
+    name: "Ana Coutinho Lima",
+    gender: "FEMININO",
+    birthdate: "26-04-1965",
+    case: 'Óbito'
+  },
+  {
+    cpf: "59294687398",
+    name: "Luciana Melo de Jesus",
+    gender: "FEMININO",
+    birthdate: "17-03-1997",
+    case: 'Óbito'
+  },
+  {
+    cpf: "84370583739",
+    name: "Matheus Araújo de Souza Campos",
+    gender: "MASCULINO",
+    birthdate: "23-07-1958",
+    case: 'Óbito'
+  }
+]
+
+export { states, cities, riskGroups, people };

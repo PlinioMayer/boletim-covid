@@ -37,7 +37,7 @@ const useStyle = makeStyles(theme => ({
   },
 }));
 
-function returnByStatusState (statusState, entities, headers, pageState, rowsState, showUpdateModal) {
+function returnByStatusState (statusState, entities, headers, pageState, rowsState, showUpdateModal, converters) {
   switch (statusState) {
     case 'fetching':
       return (
@@ -55,6 +55,7 @@ function returnByStatusState (statusState, entities, headers, pageState, rowsSta
             pageState={pageState}
             rowsState={rowsState}
             showUpdateModal={showUpdateModal}
+            converters={converters}
           />
         );
       }
@@ -92,7 +93,7 @@ function reducer (state, action) {
   return action;
 }
 
-const RegisterList = ({ headers, entities, title, form }) => {
+const RegisterList = ({ headers, entities, title, form, converters }) => {
   const classes= useStyle();
   const Form = form;
 
@@ -123,7 +124,7 @@ const RegisterList = ({ headers, entities, title, form }) => {
           </Button>
         </Toolbar>
 
-        { returnByStatusState(statusState, entities, headers, pageState, rowsState, showUpdateModal) }
+        { returnByStatusState(statusState, entities, headers, pageState, rowsState, showUpdateModal, converters) }
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}

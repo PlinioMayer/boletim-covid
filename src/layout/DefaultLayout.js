@@ -17,7 +17,14 @@ import {
   Home as HomeIcon,
   Flag as FlagIcon,
   Room as RoomIcon,
-  Warning as WarningIcon
+  Warning as WarningIcon,
+  AccountBox as AccountBoxIcon,
+  Phone as PhoneIcon,
+  MonetizationOn as MonetizationOnIcon,
+  LocalHospital as LocalHospitalIcon,
+  AirlineSeatFlat as AirlineSeatFlatIcon,
+  Exposure as ExposureIcon,
+  AssignmentInd as AssignmentIndIcon
 } from '@material-ui/icons';
 import { UnstyledLink } from 'components';
 
@@ -62,6 +69,7 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
+    zIndex: 3,
   },
   drawerOpen: {
     width: drawerWidth,
@@ -76,7 +84,10 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: 'hidden',
-    width: theme.spacing(7),
+    width: theme.spacing(7) + 1,
+  },
+  drawerScroll: {
+    width: theme.spacing(9)
   },
   toolbar: {
     display: 'flex',
@@ -92,9 +103,73 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const menuItems = [
+  {
+    text: 'Início',
+    icon: <HomeIcon />,
+    url: '/'
+  },
+  {
+    text: 'Pessoas',
+    icon: <AccountBoxIcon />,
+    url: '/pessoas'
+  },
+  {
+    text: 'Estados',
+    icon: <FlagIcon />,
+    url: '/estados'
+  },
+  {
+    text: 'Cidades',
+    icon: <RoomIcon />,
+    url: '/cidades'
+  },
+  {
+    text: 'Grupos de Risco',
+    icon: <WarningIcon />,
+    url: '/grupos-de-risco'
+  },
+  {
+    text: 'Auxílio Emergencial',
+    icon: <MonetizationOnIcon />,
+    url: '/auxilio-emergencial'
+  },
+  {
+    text: 'Telefones',
+    icon: <PhoneIcon />,
+    url: '/telefones'
+  },
+  {
+    text: 'Postos',
+    icon: <LocalHospitalIcon />,
+    url: '/postos'
+  },
+  {
+    text: 'Leitos',
+    icon: <AirlineSeatFlatIcon />,
+    url: 'leitos'
+  },
+  {
+    text: 'Testes',
+    icon: <ExposureIcon />,
+    url: '/testes'
+  },
+  {
+    text: 'Médicos',
+    icon: <AssignmentIndIcon />,
+    url: '/medicos'
+  }
+];
+
 export default function MiniDrawer(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [scroll, setScroll] = React.useState(window.innerHeight < 620);
+
+  window.addEventListener('resize', () => {
+    console.log(scroll);
+    setScroll(window.innerHeight < 620);
+  })
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -121,18 +196,19 @@ export default function MiniDrawer(props) {
         </Toolbar>
       </AppBar>
       <Drawer
-        anchor="left"
         onMouseOver={handleDrawerOpen}
         onMouseLeave={handleDrawerClose}
         variant="permanent"
         className={clsx(classes.drawer, {
           [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
+          [classes.drawerScroll]: scroll && !open,
+          [classes.drawerClose]: !open
         })}
         classes={{
           paper: clsx({
             [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
+            [classes.drawerScroll]: scroll && !open,
+            [classes.drawerClose]: !open
           }),
         }}
       >
@@ -141,28 +217,7 @@ export default function MiniDrawer(props) {
         </DrawerTitle>
         <Divider />
         <List>
-          {[
-            {
-              text: 'Início',
-              icon: <HomeIcon />,
-              url: '/'
-            },
-            {
-              text: 'Estados',
-              icon: <FlagIcon />,
-              url: '/estados'
-            },
-            {
-              text: 'Cidades',
-              icon: <RoomIcon />,
-              url: '/cidades'
-            },
-            {
-              text: 'Grupos de Risco',
-              icon: <WarningIcon />,
-              url: '/grupos-de-risco'
-            }
-          ].map(elem => (
+          {menuItems.map(elem => (
             <UnstyledLink key={elem.url} to={elem.url}>
               <ListItem button key={elem.text}>
                 <ListItemIcon>{elem.icon}</ListItemIcon>

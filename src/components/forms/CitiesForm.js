@@ -133,7 +133,7 @@ const CitiesForm = ({ entity }) => {
   return (
     <>
       <Toolbar className={classes.topToolbar}>
-        <Typography variant="subtitle1">Criar nova Cidade</Typography>
+        <Typography variant="subtitle1">{ !entity ?  'Criar nova' : 'Atualizar' } Cidade</Typography>
       </Toolbar>
       <Box className={classes.box}>
         <TextField
