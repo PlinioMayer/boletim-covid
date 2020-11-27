@@ -6,23 +6,30 @@ import {
 
 import { Home, RegisterList } from './views';
 import { DefaultLayout } from './layout';
-import { StatesForm, CitiesForm, RiskGroupsForm, PeopleForm } from 'components/forms';
-import { states, cities, riskGroups, people } from 'utils/mock';
+import { PeopleForm, HealthCentersForm } from 'components/forms';
 
-const statesHeaders = [
-  'name', 'population', 'region'
-]
+// const statesHeaders = [
+//   'name', 'population', 'region'
+// ]
 
-const citiesHeaders = [
-  'name', 'population', 'state'
-]
+// const citiesHeaders = [
+//   'name', 'population', 'state'
+// ]
 
-const riskGroupHeaders = [
-  'name'
-]
+// const riskGroupHeaders = [
+//   'name'
+// ]
 
 const peopleHeaders = [
-  'cpf', 'name', 'case', 'birthdate', 'gender'
+  'cpf', 'name', 'gender', 'race', 'birthdate', 'city_name', 'case_name'
+]
+
+const statesBulletinsHeaders = [
+  'name', 'confirmed', 'recovered', 'active', 'death', 'men_cases', 'women_cases'
+]
+
+const healthCenterHeaders = [
+  'name', 'address', 'total', 'occupied', 'city_name'
 ]
 
 const peopleConverters = {
@@ -30,8 +37,6 @@ const peopleConverters = {
     if (typeof value !== 'string') {
       return value;
     }
-
-    console.log(value);
 
     return value.split('-').reverse().join('/');
   }
@@ -46,44 +51,44 @@ function App() {
             <Home />
           </Route>
 
-          <Route path="/estados">
-            <RegisterList
-              headers={statesHeaders}
-              entities={states}
-              title="Estados"
-              form={ StatesForm }
-              baseUrl="states"
-            />
-          </Route>
-
-          <Route path="/cidades">
-            <RegisterList
-              headers={citiesHeaders}
-              entities={cities}
-              title="Cidades"
-              form={ CitiesForm }
-              baseUrl="cities"
-            />
-          </Route>
-
-          <Route path="/grupos-de-risco">
+          {/* <Route path="/grupos-de-risco">
             <RegisterList
               headers={riskGroupHeaders}
-              entities={riskGroups}
               title="Grupos de Risco"
               form={ RiskGroupsForm }
               baseUrl="risk_groups"
             />
-          </Route>
+          </Route> */}
 
           <Route path="/pessoas">
             <RegisterList
               headers={peopleHeaders}
-              entities={people}
               title="Pessoas"
               form={ PeopleForm }
               baseUrl="people"
               converters={peopleConverters}
+              identifier="p"
+            />
+          </Route>
+
+          <Route path="/boletim-estadual">
+            <RegisterList
+              readOnly={true}
+              headers={statesBulletinsHeaders}
+              title="Boletim Estadual"
+              form={ PeopleForm }
+              baseUrl="states_bulletins"
+              identifier="sb"
+            />
+          </Route>
+
+          <Route path="/postos">
+            <RegisterList
+              headers={healthCenterHeaders}
+              title="Postos"
+              form={ HealthCentersForm }
+              baseUrl="health_centers"
+              identifier="h"
             />
           </Route>
           

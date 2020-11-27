@@ -1,6 +1,7 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useState, useEffect } from 'react';
 import { Table, Modal } from '../components';
 import { styled, makeStyles } from '@material-ui/core/styles';
+import api from 'utils/api';
 import {
   Box,
   CircularProgress,
@@ -37,7 +38,7 @@ const useStyle = makeStyles(theme => ({
   },
 }));
 
-function returnByStatusState (statusState, entities, headers, pageState, rowsState, showUpdateModal, converters) {
+function returnByStatusState (statusState, entities, headers, pageState, rowsState, showUpdateModal, converters, identifier) {
   switch (statusState) {
     case 'fetching':
       return (
@@ -56,6 +57,7 @@ function returnByStatusState (statusState, entities, headers, pageState, rowsSta
             rowsState={rowsState}
             showUpdateModal={showUpdateModal}
             converters={converters}
+            identifier={identifier}
           />
         );
       }
@@ -93,7 +95,7 @@ function reducer (state, action) {
   return action;
 }
 
-const RegisterList = ({ headers, entities, title, form, converters }) => {
+const RegisterList = ({ headers, title, form, converters, readOnly, baseUrl, identifier }) => {
   const classes= useStyle();
   const Form = form;
 
@@ -103,13 +105,25 @@ const RegisterList = ({ headers, entities, title, form, converters }) => {
   const [creationModalState, creationModalDispatch] = useReducer(modalReducer, false);
   const [updateModalState, updateModalDispatch] = useReducer(modalReducer, false);
   const [focusedEntityState, focusedEntityDispatch] = useReducer(reducer, null);
+  const [entities, setEntities] = useState([]);
+
+  useEffect(() => {
+    api.get(baseUrl)
+      .then(r => {
+        setEntities(r.data);
+        statusDispatch('done');
+      })
+      .catch(err => {
+        console.log(err);
+        statusDispatch('error');
+      })
+  }, [baseUrl])
+
 
   const showUpdateModal = (entity) => {
     focusedEntityDispatch(entity);
     updateModalDispatch();
   }
-
-  setTimeout(() => { statusDispatch('done') }, 1000);
 
   return (
     <Box className={classes.root}>
@@ -118,13 +132,16 @@ const RegisterList = ({ headers, entities, title, form, converters }) => {
           <Typography variant="subtitle1">
             {title}
           </Typography>
-
-          <Button variant="contained" color="primary" onClick={creationModalDispatch}>
-            CRIAR NOVO
-          </Button>
+          {
+            !readOnly && (
+              <Button variant="contained" color="primary" onClick={creationModalDispatch}>
+                CRIAR NOVO
+              </Button>
+            )
+          }
         </Toolbar>
 
-        { returnByStatusState(statusState, entities, headers, pageState, rowsState, showUpdateModal, converters) }
+        { returnByStatusState(statusState, entities, headers, pageState, rowsState, showUpdateModal, converters, identifier) }
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}

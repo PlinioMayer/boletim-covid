@@ -22,10 +22,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const BaseTable = ({ headers, entities, pageState, rowsState, showUpdateModal, converters }) => {
+const BaseTable = ({ headers, entities, pageState, rowsState, showUpdateModal, converters, identifier }) => {
   const classes = useStyles();
   const innerConverters = converters ? converters : {};
-  console.log(converters, innerConverters)
   return (
       <TableContainer className={classes.root}>
         <Table stickyHeader>
@@ -33,20 +32,20 @@ const BaseTable = ({ headers, entities, pageState, rowsState, showUpdateModal, c
             <TableRow>
               <TableCell variant="head">{dictionary[headers[0]]}</TableCell>
               {
-                headers.slice(1).map(elem => (
-                  <TableCell key={elem} align="right" variant="head">{dictionary[elem]}</TableCell>
+                headers.slice(1).map((elem, index) => (
+                  <TableCell key={'h' + identifier + index} align="right" variant="head">{dictionary[elem]}</TableCell>
                 ))
               }
             </TableRow>
           </TableHead>
           <TableBody>
-            {entities.slice(pageState * rowsState, pageState * rowsState + rowsState).map(entity => (
-              <TableRow onClick={() => showUpdateModal(entity)} className={classes.tableRow} key={entity[headers[0]]}>
+            {entities.slice(pageState * rowsState, pageState * rowsState + rowsState).map((entity, entityIndex) => (
+              <TableRow onClick={() => showUpdateModal(entity)} className={classes.tableRow} key={'r' + identifier + entityIndex}>
                 <TableCell>{entity[headers[0]]}</TableCell>
                 { 
                   headers.slice(1)
-                    .map(elem => (
-                      <TableCell key={elem} align="right">{innerConverters[elem] ? innerConverters[elem](entity[elem]) : entity[elem]}</TableCell>
+                    .map((elem, headerIndex) => (
+                      <TableCell key={'c' + identifier + headerIndex} align="right">{innerConverters[elem] ? innerConverters[elem](entity[elem]) : entity[elem]}</TableCell>
                     ))
                 }
               </TableRow>

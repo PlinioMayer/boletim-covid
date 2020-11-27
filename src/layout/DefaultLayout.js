@@ -15,16 +15,9 @@ import clsx from 'clsx';
 import { makeStyles, styled } from '@material-ui/core/styles';
 import {
   Home as HomeIcon,
-  Flag as FlagIcon,
-  Room as RoomIcon,
-  Warning as WarningIcon,
   AccountBox as AccountBoxIcon,
-  Phone as PhoneIcon,
-  MonetizationOn as MonetizationOnIcon,
   LocalHospital as LocalHospitalIcon,
-  AirlineSeatFlat as AirlineSeatFlatIcon,
-  Exposure as ExposureIcon,
-  AssignmentInd as AssignmentIndIcon
+  AssignmentLate as AssignmentLateIcon
 } from '@material-ui/icons';
 import { UnstyledLink } from 'components';
 
@@ -115,50 +108,45 @@ const menuItems = [
     url: '/pessoas'
   },
   {
-    text: 'Estados',
-    icon: <FlagIcon />,
-    url: '/estados'
+    text: 'Boletim Estadual',
+    icon: <AssignmentLateIcon />,
+    url: '/boletim-estadual'
   },
-  {
-    text: 'Cidades',
-    icon: <RoomIcon />,
-    url: '/cidades'
-  },
-  {
-    text: 'Grupos de Risco',
-    icon: <WarningIcon />,
-    url: '/grupos-de-risco'
-  },
-  {
-    text: 'Auxílio Emergencial',
-    icon: <MonetizationOnIcon />,
-    url: '/auxilio-emergencial'
-  },
-  {
-    text: 'Telefones',
-    icon: <PhoneIcon />,
-    url: '/telefones'
-  },
+  // {
+  //   text: 'Grupos de Risco',
+  //   icon: <WarningIcon />,
+  //   url: '/grupos-de-risco'
+  // },
   {
     text: 'Postos',
     icon: <LocalHospitalIcon />,
     url: '/postos'
   },
-  {
-    text: 'Leitos',
-    icon: <AirlineSeatFlatIcon />,
-    url: 'leitos'
-  },
-  {
-    text: 'Testes',
-    icon: <ExposureIcon />,
-    url: '/testes'
-  },
-  {
-    text: 'Médicos',
-    icon: <AssignmentIndIcon />,
-    url: '/medicos'
-  }
+  // {
+  //   text: 'Auxílio Emergencial',
+  //   icon: <MonetizationOnIcon />,
+  //   url: '/auxilio-emergencial'
+  // },
+  // {
+  //   text: 'Telefones',
+  //   icon: <PhoneIcon />,
+  //   url: '/telefones'
+  // },
+  // {
+  //   text: 'Leitos',
+  //   icon: <AirlineSeatFlatIcon />,
+  //   url: 'leitos'
+  // },
+  // {
+  //   text: 'Testes',
+  //   icon: <ExposureIcon />,
+  //   url: '/testes'
+  // },
+  // {
+  //   text: 'Médicos',
+  //   icon: <AssignmentIndIcon />,
+  //   url: '/medicos'
+  // }
 ];
 
 export default function MiniDrawer(props) {
@@ -167,7 +155,6 @@ export default function MiniDrawer(props) {
   const [scroll, setScroll] = React.useState(window.innerHeight < 620);
 
   window.addEventListener('resize', () => {
-    console.log(scroll);
     setScroll(window.innerHeight < 620);
   })
 

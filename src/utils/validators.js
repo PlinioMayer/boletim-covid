@@ -1,4 +1,8 @@
 function onlyNumbers(string) {
+  if (typeof string === 'number') {
+    string = string.toString();
+  }
+  
   return string.match('\\d+') ? true : false;
 }
 
