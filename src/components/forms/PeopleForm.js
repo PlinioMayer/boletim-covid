@@ -17,7 +17,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { handleByValue } from 'utils/common';
 import { onlyNumbers, notNull } from 'utils/validators';
-import { genders, cases, cities, races } from 'utils/options';
+import { genders, cases, cities, races, risk_groups } from 'utils/options';
 import api from 'utils/api';
 
 const useStyles = makeStyles(theme => ({
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   },
   bottomToolbar: {
     display: 'flex',
-    justifyContent: 'right',
+    justifyContent: 'space-between',
     padding: 0
   },
   phoneToolbar: {
@@ -61,7 +61,7 @@ const objReducer = (state, action) => {
   return obj;
 }
 
-const sendRequest = (entity, errorsDispatch, openSuccessDialog, openErrorDialog) => {
+const sendRequest = (entity, errorsDispatch, openSuccessDialog, openErrorDialog, afterModify) => {
 
   let error = false;
 
@@ -111,19 +111,32 @@ const sendRequest = (entity, errorsDispatch, openSuccessDialog, openErrorDialog)
     api.put('people/' + entity.id, entity)
     .then(() => {
       openSuccessDialog();
+      afterModify();
     })
     .catch(() => {
       openErrorDialog();
     })
   } else {
     api.post('people', entity)
+      .then(() => {
+        openSuccessDialog();
+        afterModify();
+      })
+      .catch(() => {
+        openErrorDialog();
+      })
+  }
+}
+
+const sendDeleteRequest = (id, openSuccessDialog, openErrorDialog, afterModify) => {
+  api.delete('people/' + id)
     .then(() => {
       openSuccessDialog();
+      afterModify();
     })
     .catch(() => {
       openErrorDialog();
     })
-  }
 }
 
 const initialErrorsState = {
@@ -134,7 +147,7 @@ const initialErrorsState = {
 }
 
 
-const PeopleForm = ({ entity }) => {
+const PeopleForm = ({ entity, afterModify }) => {
   const classes = useStyles();
 
   const initialEntityState = entity ? {
@@ -169,7 +182,7 @@ const PeopleForm = ({ entity }) => {
   return (
     <>
       <Toolbar className={classes.topToolbar}>
-        <Typography variant="subtitle1">Criar novo Estado</Typography>
+        <Typography variant="subtitle1">{!entityState.id ? 'Criar novo Estado' : 'Atualizar Estado'}</Typography>
       </Toolbar>
       <Box className={classes.box}>
         <TextField
@@ -271,16 +284,31 @@ const PeopleForm = ({ entity }) => {
             </Select>
             <FormHelperText>{errorsState.race ? errorsState.race.message : ''}</FormHelperText>
           </FormControl>
+
+          { !entityState.id && <FormControl
+            className={classes.inputs}
+          >
+            <InputLabel id="risk-group-select-label">Grupo de Risco</InputLabel>
+
+            <Select
+              labelId="risk-group-select-label"
+              value={entityState.risk_group_id}
+              onChange={handleByValue(value => handleChange('risk_group_id', value))}
+            >
+              { risk_groups.map((elem, index) => <MenuItem key={index} value={elem.value}>{elem.name}</MenuItem>) }
+            </Select>
+          </FormControl>}
       </Box>
       <Toolbar className={classes.bottomToolbar}>
-        <Button onClick={() => sendRequest(entityState, errorsDispatch, () => setSuccessDialogState(true), () => setErrorDialogState(true))} variant="contained" color="primary">ENVIAR</Button>
+        {entityState.id ? <Button onClick={() => sendDeleteRequest(entityState.id, () => setSuccessDialogState(true), () => setErrorDialogState(true), afterModify)} variant="contained" color="secondary">DELETAR</Button> : <div/> }
+        <Button onClick={() => sendRequest(entityState, errorsDispatch, () => setSuccessDialogState(true), () => setErrorDialogState(true), afterModify)} variant="contained" color="primary">ENVIAR</Button>
       </Toolbar>
       
       <Dialog
         open={successDialogState}
         onClose={() => setSuccessDialogState(false)}
       >
-        <DialogTitle>Pessoa cadastrada com sucesso</DialogTitle>
+        <DialogTitle>Pessoa {entityState.id ? 'alterada' : 'cadastrada'} com sucesso</DialogTitle>
         <DialogActions>
           <Button onClick={() => setSuccessDialogState(false)} color="primary" autoFocus>
             OK
@@ -292,7 +320,7 @@ const PeopleForm = ({ entity }) => {
         open={errorDialogState}
         onClose={() => setErrorDialogState(false)}
       >
-        <DialogTitle>Pessoa cadastrada com sucesso</DialogTitle>
+        <DialogTitle>Erro ao {entityState.id ? 'alterar' : 'cadastrar'} pessoa</DialogTitle>
         <DialogActions>
           <Button onClick={() => setErrorDialogState(false)} color="primary" autoFocus>
             OK

@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   },
   bottomToolbar: {
     display: 'flex',
-    justifyContent: 'right',
+    justifyContent: 'space-between',
     padding: 0
   },
   phoneToolbar: {
@@ -61,7 +61,7 @@ const objReducer = (state, action) => {
   return obj;
 }
 
-const sendRequest = (entity, errorsDispatch, openSuccessDialog, openErrorDialog) => {
+const sendRequest = (entity, errorsDispatch, openSuccessDialog, openErrorDialog, afterModify) => {
 
   let error = false;
 
@@ -107,16 +107,29 @@ const sendRequest = (entity, errorsDispatch, openSuccessDialog, openErrorDialog)
     })
     .catch(() => {
       openErrorDialog();
+      afterModify();
     })
   } else {
     api.post('health_centers', entity)
     .then(() => {
       openSuccessDialog();
+      afterModify();
     })
     .catch(() => {
       openErrorDialog();
     })
   }
+}
+
+const sendDeleteRequest = (id, openSuccessDialog, openErrorDialog, afterModify) => {
+  api.delete('health_centers/' + id)
+    .then(() => {
+      openSuccessDialog();
+      afterModify();
+    })
+    .catch(() => {
+      openErrorDialog();
+    })
 }
 
 const initialErrorsState = {
@@ -127,7 +140,7 @@ const initialErrorsState = {
 }
 
 
-const HealthCentersForm = ({ entity }) => {
+const HealthCentersForm = ({ entity, afterModify }) => {
   const classes = useStyles();
 
   const initialEntityState = entity ? {
@@ -158,7 +171,7 @@ const HealthCentersForm = ({ entity }) => {
   return (
     <>
       <Toolbar className={classes.topToolbar}>
-        <Typography variant="subtitle1">Criar novo Estado</Typography>
+        <Typography variant="subtitle1">{!entityState.id ? 'Criar novo Posto' : 'Atualizar Posto'}</Typography>
       </Toolbar>
       <Box className={classes.box}>
         <TextField
@@ -221,14 +234,15 @@ const HealthCentersForm = ({ entity }) => {
 
       </Box>
       <Toolbar className={classes.bottomToolbar}>
-        <Button onClick={() => sendRequest(entityState, errorsDispatch, () => setSuccessDialogState(true), () => setErrorDialogState(true))} variant="contained" color="primary">ENVIAR</Button>
+        {entityState.id ? <Button onClick={() => sendDeleteRequest(entityState.id, () => setSuccessDialogState(true), () => setErrorDialogState(true), afterModify)} variant="contained" color="secondary">DELETAR</Button> : <div/> }
+        <Button onClick={() => sendRequest(entityState, errorsDispatch, () => setSuccessDialogState(true), () => setErrorDialogState(true), afterModify)} variant="contained" color="primary">ENVIAR</Button>
       </Toolbar>
       
       <Dialog
         open={successDialogState}
         onClose={() => setSuccessDialogState(false)}
       >
-        <DialogTitle>Pessoa cadastrada com sucesso</DialogTitle>
+        <DialogTitle>Posto {entityState.id ? 'alterado' : 'cadastrado'} com sucesso</DialogTitle>
         <DialogActions>
           <Button onClick={() => setSuccessDialogState(false)} color="primary" autoFocus>
             OK
@@ -240,7 +254,7 @@ const HealthCentersForm = ({ entity }) => {
         open={errorDialogState}
         onClose={() => setErrorDialogState(false)}
       >
-        <DialogTitle>Pessoa cadastrada com sucesso</DialogTitle>
+        <DialogTitle>Erro ao {entityState.id ? 'alterar' : 'cadastrar'} posto</DialogTitle>
         <DialogActions>
           <Button onClick={() => setErrorDialogState(false)} color="primary" autoFocus>
             OK

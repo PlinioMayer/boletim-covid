@@ -80,6 +80,18 @@ function returnByStatusState (statusState, entities, headers, pageState, rowsSta
   }
 }
 
+const getEntities = (baseUrl, setEntities, statusDispatch) => {
+  api.get(baseUrl)
+      .then(r => {
+        setEntities(r.data);
+        statusDispatch('done');
+      })
+      .catch(err => {
+        console.log(err);
+        statusDispatch('error');
+      })
+
+}
 
 
 function changeRowsState (event, pageDispatch, rowsDispatch) {
@@ -108,15 +120,7 @@ const RegisterList = ({ headers, title, form, converters, readOnly, baseUrl, ide
   const [entities, setEntities] = useState([]);
 
   useEffect(() => {
-    api.get(baseUrl)
-      .then(r => {
-        setEntities(r.data);
-        statusDispatch('done');
-      })
-      .catch(err => {
-        console.log(err);
-        statusDispatch('error');
-      })
+    getEntities(baseUrl, setEntities, statusDispatch)
   }, [baseUrl])
 
 
@@ -153,11 +157,11 @@ const RegisterList = ({ headers, title, form, converters, readOnly, baseUrl, ide
           onChangeRowsPerPage={e => changeRowsState(e, pageDispatch, rowsDispatch)}
         />
         <Modal open={creationModalState} handleClose={creationModalDispatch}>
-          <Form />
+          <Form afterModify={() => getEntities(baseUrl, setEntities, statusDispatch)} />
         </Modal>
 
         <Modal open={updateModalState} handleClose={updateModalDispatch}>
-          <Form entity={focusedEntityState} />
+          <Form afterModify={() => getEntities(baseUrl, setEntities, statusDispatch)} entity={focusedEntityState} />
         </Modal>
       </Paper>
       

@@ -152,21 +152,64 @@ export const cases = [
       },
   ]
 
-  export const races = [
-    {
-      name: 'Negra',
-      value: 'Negra'
-    },
-    {
-      name: 'Branca',
-      value: 'Branca'
-    },
-    {
-        name: 'Indigena',
-        value: 'Indigena'
-    },
-    {
-        name: 'Parda',
-        value: 'Parda'
-    }
-  ]
+export const races = [
+  {
+    name: 'Negra',
+    value: 'Negra'
+  },
+  {
+    name: 'Branca',
+    value: 'Branca'
+  },
+  {
+      name: 'Indigena',
+      value: 'Indigena'
+  },
+  {
+      name: 'Parda',
+      value: 'Parda'
+  }
+]
+
+export const risk_groups = [
+  {
+    name: 'Idoso',
+    value: 1
+  },
+  {
+    name: 'Cardíaco',
+    value: 2
+  },
+  {
+    name: 'Doente Pulmonar',
+    value: 3
+  },
+  {
+    name: 'Tabagista',
+    value: 4
+  },
+  {
+    name: 'Diabético',
+    value: 5
+  },
+  {
+    name: 'Imunodepressivo',
+    value: 6
+  },
+  {
+    name: 'Doente Renal',
+    value: 7
+  },
+  {
+    name: 'Doente Hepático',
+    value: 8
+  },
+  {
+    name: 'Doente Neurodegenerativo',
+    value: 9
+  },
+  {
+    name: 'Trabalhador da Saúde',
+    value: 10
+  }
+]
