@@ -120,7 +120,8 @@ const RegisterList = ({ headers, title, form, converters, readOnly, baseUrl, ide
   const [entities, setEntities] = useState([]);
 
   useEffect(() => {
-    getEntities(baseUrl, setEntities, statusDispatch)
+    getEntities(baseUrl, setEntities, statusDispatch);
+    pageDispatch(0);
   }, [baseUrl])
 
 

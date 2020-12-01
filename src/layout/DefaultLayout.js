@@ -17,7 +17,12 @@ import {
   Home as HomeIcon,
   AccountBox as AccountBoxIcon,
   LocalHospital as LocalHospitalIcon,
-  AssignmentLate as AssignmentLateIcon
+  AssignmentLate as AssignmentLateIcon,
+  Warning as WarningIcon,
+  Phone as PhoneIcon,
+  Exposure as ExposureIcon,
+  MonetizationOn as MonetizationOnIcon,
+  Error as ErrorIcon
 } from '@material-ui/icons';
 import { UnstyledLink } from 'components';
 
@@ -112,36 +117,41 @@ const menuItems = [
     icon: <AssignmentLateIcon />,
     url: '/boletim-estadual'
   },
-  // {
-  //   text: 'Grupos de Risco',
-  //   icon: <WarningIcon />,
-  //   url: '/grupos-de-risco'
-  // },
+  {
+    text: 'Grupos de Risco',
+    icon: <WarningIcon />,
+    url: '/grupos-de-risco'
+  },
   {
     text: 'Postos',
     icon: <LocalHospitalIcon />,
     url: '/postos'
   },
-  // {
-  //   text: 'Auxílio Emergencial',
-  //   icon: <MonetizationOnIcon />,
-  //   url: '/auxilio-emergencial'
-  // },
-  // {
-  //   text: 'Telefones',
-  //   icon: <PhoneIcon />,
-  //   url: '/telefones'
-  // },
+  {
+    text: 'Auxílio Emergencial',
+    icon: <MonetizationOnIcon />,
+    url: '/auxilios-emergenciais'
+  },
+  {
+    text: 'Telefones',
+    icon: <PhoneIcon />,
+    url: '/telefones'
+  },
+  {
+    text: 'Pessoas em Risco',
+    icon: <ErrorIcon />,
+    url: 'pessoas-em-risco'
+  },
   // {
   //   text: 'Leitos',
   //   icon: <AirlineSeatFlatIcon />,
   //   url: 'leitos'
   // },
-  // {
-  //   text: 'Testes',
-  //   icon: <ExposureIcon />,
-  //   url: '/testes'
-  // },
+  {
+    text: 'Testes',
+    icon: <ExposureIcon />,
+    url: '/testes'
+  },
   // {
   //   text: 'Médicos',
   //   icon: <AssignmentIndIcon />,

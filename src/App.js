@@ -6,22 +6,15 @@ import {
 
 import { Home, RegisterList } from './views';
 import { DefaultLayout } from './layout';
-import { PeopleForm, HealthCentersForm } from 'components/forms';
+import { PeopleForm, HealthCentersForm, RiskGroupsForm, PeopleRiskGroupsForm } from 'components/forms';
+import { EmergencialSupportsForm } from './components/forms';
 
-// const statesHeaders = [
-//   'name', 'population', 'region'
-// ]
-
-// const citiesHeaders = [
-//   'name', 'population', 'state'
-// ]
-
-// const riskGroupHeaders = [
-//   'name'
-// ]
+const riskGroupHeaders = [
+  'name'
+]
 
 const peopleHeaders = [
-  'cpf', 'name', 'gender', 'race', 'birthdate', 'city_name', 'case_name'
+  'id', 'cpf', 'name', 'gender', 'race', 'birthdate', 'city_name', 'case_name'
 ]
 
 const statesBulletinsHeaders = [
@@ -30,6 +23,14 @@ const statesBulletinsHeaders = [
 
 const healthCenterHeaders = [
   'name', 'address', 'total', 'occupied', 'city_name'
+]
+
+const emergencialSupportsHeaders = [
+  'person_name', 'value', 'date'
+]
+
+const peopleRiskGroupsHeaders = [
+  'person_name', 'risk_group_name'
 ]
 
 const peopleConverters = {
@@ -92,6 +93,35 @@ function App() {
             />
           </Route>
           
+          <Route path="/grupos-de-risco">
+            <RegisterList
+              headers={ riskGroupHeaders }
+              title="Grupos de Risco"
+              form={ RiskGroupsForm }
+              baseUrl="risk_groups"
+              identifier="rg"
+            />
+          </Route>
+
+          <Route path="/auxilios-emergenciais">
+            <RegisterList
+              headers={ emergencialSupportsHeaders }
+              title="Auxílios Emergenciais"
+              form={ EmergencialSupportsForm }
+              baseUrl="emergencial_supports"
+              identifier="es"
+            />
+          </Route>
+
+          <Route path="/pessoas-em-risco">
+            <RegisterList
+              headers={ peopleRiskGroupsHeaders }
+              title="Pessoas em Risco"
+              form={ PeopleRiskGroupsForm }
+              baseUrl="people_risk_groups"
+              identifier="prg"
+            />
+          </Route>
         </Switch>
       </DefaultLayout>
     </Router>

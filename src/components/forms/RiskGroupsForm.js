@@ -1,8 +1,18 @@
-import React, { useReducer } from 'react';
-import { TextField, Toolbar, Typography, Box, Button} from '@material-ui/core';
+import React, { useReducer, useState } from 'react';
+import {
+  TextField,
+  Toolbar,
+  Typography,
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogActions
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { handleByValue } from 'utils/common';
-import { notNull } from 'utils/validators'
+import { notNull } from 'utils/validators';
+import api from 'utils/api';
 
 const useStyles = makeStyles(theme => ({
   inputs: {
@@ -20,38 +30,32 @@ const useStyles = makeStyles(theme => ({
   },
   bottomToolbar: {
     display: 'flex',
-    justifyContent: 'right',
+    justifyContent: 'space-between',
     padding: 0
+  },
+  phoneToolbar: {
+    display: 'flex',
+    justifyContent: 'right'
+  },
+  telefonesOuterContainer: {
+    width: '100%',
+    marginTop: theme.spacing(2)
+  },
+  telefonesInnerContainer: {
+    maxHeight: '10vw',
+    overflow: 'auto',
+    width: '100%'
   }
 }));
 
-const entityReducer = (state, action) => {
-  switch (action.type) {
-    case 'name':
-      return {
-        ...state,
-        name: action.value
-      };
+const objReducer = (state, action) => {
+  const obj = { ...state };
+  obj[action.type] = action.value;
 
-    default:
-      return state;
-  }
+  return obj;
 }
 
-const errorsReducer = (state, action) => {
-  switch (action.type) {
-    case 'name':
-      return {
-        ...state,
-        name: action.value
-      };
-
-    default:
-      return state;
-  }
-}
-
-const sendRequest = (entity, errorsDispatch) => {
+const sendRequest = (entity, errorsDispatch, openSuccessDialog, openErrorDialog, afterModify) => {
 
   let error = false;
 
@@ -63,14 +67,48 @@ const sendRequest = (entity, errorsDispatch) => {
   if (error) {
     return;
   }
+
+  if (entity.id) {
+    api.put('risk_groups/' + entity.id, entity)
+    .then(() => {
+      openSuccessDialog();
+      afterModify();
+    })
+    .catch(() => {
+      openErrorDialog();
+    })
+  } else {
+    api.post('risk_groups', entity)
+      .then(() => {
+        openSuccessDialog();
+        afterModify();
+      })
+      .catch(() => {
+        openErrorDialog();
+      })
+  }
+}
+
+const sendDeleteRequest = (id, openSuccessDialog, openErrorDialog, afterModify) => {
+  api.delete('risk_groups/' + id)
+    .then(() => {
+      openSuccessDialog();
+      afterModify();
+    })
+    .catch(() => {
+      openErrorDialog();
+    })
 }
 
 const initialErrorsState = {
   name: null,
-  population: null
+  cpf: null,
+  gender: null,
+  birthdate: null
 }
 
-const RiskGroupsForm = ({ entity }) => {
+
+const RiskGroupsForm = ({ entity, afterModify }) => {
   const classes = useStyles();
 
   const initialEntityState = entity ? {
@@ -80,10 +118,12 @@ const RiskGroupsForm = ({ entity }) => {
     name: ''
   }
 
-  const [entityState, entityDispatch] = useReducer(entityReducer, initialEntityState);
-  const [errorsState, errorsDispatch] = useReducer(errorsReducer, initialErrorsState);
+  const [entityState, entityDispatch] = useReducer(objReducer, initialEntityState);
+  const [errorsState, errorsDispatch] = useReducer(objReducer, initialErrorsState);
+  const [successDialogState, setSuccessDialogState] = useState(false);
+  const [errorDialogState, setErrorDialogState] = useState(false);
 
-  function handleChange (type, value) {
+  const handleChange = (type, value) => {
     entityDispatch({ type, value });
     errorsDispatch({ type, value: null });
   }
@@ -91,7 +131,7 @@ const RiskGroupsForm = ({ entity }) => {
   return (
     <>
       <Toolbar className={classes.topToolbar}>
-        <Typography variant="subtitle1">{ !entity ?  'Criar novo' : 'Atualizar' } Grupo de Risco</Typography>
+        <Typography variant="subtitle1">{!entityState.id ? 'Criar novo Estado' : 'Atualizar Estado'}</Typography>
       </Toolbar>
       <Box className={classes.box}>
         <TextField
@@ -106,8 +146,33 @@ const RiskGroupsForm = ({ entity }) => {
         />
       </Box>
       <Toolbar className={classes.bottomToolbar}>
-        <Button onClick={() => sendRequest(entityState, errorsDispatch)} variant="contained" color="primary">ENVIAR</Button>
+        {entityState.id ? <Button onClick={() => sendDeleteRequest(entityState.id, () => setSuccessDialogState(true), () => setErrorDialogState(true), afterModify)} variant="contained" color="secondary">DELETAR</Button> : <div/> }
+        <Button onClick={() => sendRequest(entityState, errorsDispatch, () => setSuccessDialogState(true), () => setErrorDialogState(true), afterModify)} variant="contained" color="primary">ENVIAR</Button>
       </Toolbar>
+      
+      <Dialog
+        open={successDialogState}
+        onClose={() => setSuccessDialogState(false)}
+      >
+        <DialogTitle>Grupo de risco {entityState.id ? 'alterada' : 'cadastrada'} com sucesso</DialogTitle>
+        <DialogActions>
+          <Button onClick={() => setSuccessDialogState(false)} color="primary" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={errorDialogState}
+        onClose={() => setErrorDialogState(false)}
+      >
+        <DialogTitle>Erro ao {entityState.id ? 'alterar' : 'cadastrar'} grupo de risco</DialogTitle>
+        <DialogActions>
+          <Button onClick={() => setErrorDialogState(false)} color="primary" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 };

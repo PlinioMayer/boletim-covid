@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { handleByValue } from 'utils/common';
-import { notNull, onlyNumbers, moneyValidator } from 'utils/validators';
+import { notNull, onlyNumbers } from 'utils/validators';
 import api from 'utils/api';
 
 const useStyles = makeStyles(theme => ({
@@ -67,28 +67,20 @@ const sendRequest = (entity, errorsDispatch, openSuccessDialog, openErrorDialog,
     error = true;
   }
 
-  if (!notNull(entity.value)) {
-    errorsDispatch({ type: 'value', value: { message: 'Valor não pode estar vazio' } });
+  if (!notNull(entity.risk_group_id)) {
+    errorsDispatch({ type: 'risk_group_id', value: { message: 'ID de Grupo de Risco não pode estar vazio' } });
     error = true;
-  } else if (!moneyValidator(entity.value)) {
-    errorsDispatch({ type: 'value', value: { message: 'Valor deve estar no formato 0,00' } });
+  } else if (!onlyNumbers(entity.risk_group_id)) {
+    errorsDispatch({ type: 'risk_group_id', value: { message: 'ID de Grupo de Risco só pode conter números' } });
     error = true;
   }
-
-  if (!notNull(entity.date)) {
-    errorsDispatch({ type: 'date', value: { message: 'Data não pode estar vazia' } });
-    error = true;
-  } 
-
 
   if (error) {
     return;
   }
 
-  entity.value = parseFloat(entity.value.replace(',', '.'));
-
   if (entity.id) {
-    api.put('emergencial_supports/' + entity.id, entity)
+    api.put('people_risk_groups/' + entity.id, entity)
     .then(() => {
       openSuccessDialog();
       afterModify();
@@ -97,7 +89,7 @@ const sendRequest = (entity, errorsDispatch, openSuccessDialog, openErrorDialog,
       openErrorDialog();
     })
   } else {
-    api.post('emergencial_supports', entity)
+    api.post('people_risk_groups', entity)
       .then(() => {
         openSuccessDialog();
         afterModify();
@@ -109,7 +101,7 @@ const sendRequest = (entity, errorsDispatch, openSuccessDialog, openErrorDialog,
 }
 
 const sendDeleteRequest = (id, openSuccessDialog, openErrorDialog, afterModify) => {
-  api.delete('emergencial_supports/' + id)
+  api.delete('people_risk_groups/' + id)
     .then(() => {
       openSuccessDialog();
       afterModify();
@@ -120,24 +112,21 @@ const sendDeleteRequest = (id, openSuccessDialog, openErrorDialog, afterModify) 
 }
 
 const initialErrorsState = {
-  name: null,
-  value: null,
-  date: null
+  person_id: null,
+  risk_group_id: null
 }
 
 
-const EmergencialSupportsForm = ({ entity, afterModify }) => {
+const PeopleRiskGroupsForm = ({ entity, afterModify }) => {
   const classes = useStyles();
 
   const initialEntityState = entity ? {
     id: entity.id,
     person_id: entity.person_id,
-    value: entity.value.toLocaleString('pt-BR', {style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2}),
-    date: entity.date
+    risk_group_id: entity.risk_group_id
   } : {
     person_id: '',
-    value: '',
-    date: ''
+    risk_group_id: ''
   }
 
   const [entityState, entityDispatch] = useReducer(objReducer, initialEntityState);
@@ -153,12 +142,12 @@ const EmergencialSupportsForm = ({ entity, afterModify }) => {
   return (
     <>
       <Toolbar className={classes.topToolbar}>
-        <Typography variant="subtitle1">{!entityState.id ? 'Criar novo auxílio emergencial' : 'Atualizar auxílio emergencial'}</Typography>
+        <Typography variant="subtitle1">{!entityState.id ? 'Criar nova pessoa em risco' : 'Atualizar pessoa em risco'}</Typography>
       </Toolbar>
       <Box className={classes.box}>
         <TextField
           className={classes.inputs}
-          label="ID de pessoa"
+          label="ID de Pessoa"
           variant="outlined"
           size="small"
           value={entityState.person_id}
@@ -169,28 +158,13 @@ const EmergencialSupportsForm = ({ entity, afterModify }) => {
 
         <TextField
           className={classes.inputs}
-          label="Valor do suporte"
+          label="ID de Grupo de Risco"
           variant="outlined"
           size="small"
-          value={entityState.value}
-          onChange={handleByValue(value => handleChange('value', value))}
-          error={errorsState.value ? true : false}
-          helperText={errorsState.value ? errorsState.value.message : ''}
-        />
-
-        <TextField
-          type="date"
-          className={classes.inputs}
-          label="Data"
-          variant="outlined"
-          size="small"
-          value={entityState.date}
-          onChange={handleByValue(value => handleChange('date', value))}
-          error={errorsState.date ? true : false}
-          helperText={errorsState.date ? errorsState.date.message : ''}
-          InputLabelProps={{
-            shrink: true,
-          }}
+          value={entityState.risk_group_id}
+          onChange={handleByValue(value => handleChange('risk_group_id', value))}
+          error={errorsState.risk_group_id ? true : false}
+          helperText={errorsState.risk_group_id ? errorsState.risk_group_id.message : ''}
         />
       </Box>
       <Toolbar className={classes.bottomToolbar}>
@@ -202,7 +176,7 @@ const EmergencialSupportsForm = ({ entity, afterModify }) => {
         open={successDialogState}
         onClose={() => setSuccessDialogState(false)}
       >
-        <DialogTitle>Auxílio emergencial {entityState.id ? 'alterado' : 'cadastrado'} com sucesso</DialogTitle>
+        <DialogTitle>Pessoa em risco {entityState.id ? 'alterada' : 'cadastrada'} com sucesso</DialogTitle>
         <DialogActions>
           <Button onClick={() => setSuccessDialogState(false)} color="primary" autoFocus>
             OK
@@ -214,7 +188,7 @@ const EmergencialSupportsForm = ({ entity, afterModify }) => {
         open={errorDialogState}
         onClose={() => setErrorDialogState(false)}
       >
-        <DialogTitle>Erro ao {entityState.id ? 'alterar' : 'cadastrar'} auxílio emergencial</DialogTitle>
+        <DialogTitle>Erro ao {entityState.id ? 'alterar' : 'cadastrar'} pessoa em risco</DialogTitle>
         <DialogActions>
           <Button onClick={() => setErrorDialogState(false)} color="primary" autoFocus>
             OK
@@ -225,4 +199,4 @@ const EmergencialSupportsForm = ({ entity, afterModify }) => {
   )
 };
 
-export default EmergencialSupportsForm;
+export default PeopleRiskGroupsForm;

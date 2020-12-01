@@ -19,7 +19,12 @@ const dictionary =  {
   race: 'Raça',
   address: 'Endereço',
   total: 'Total',
-  occupied: 'Ocupado'
+  occupied: 'Ocupado',
+  person_name: 'Pessoa',
+  value: 'Valor',
+  date: 'Data',
+  id: 'ID',
+  risk_group_name: 'Grupo de Risco'
 };
 
 export default dictionary;
