@@ -15,14 +15,13 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: '60vh'
   },
   tableRow: {
-    cursor: 'pointer',
     '&:hover': {
       backgroundColor: theme.palette.action.hover
     }
   }
 }));
 
-const BaseTable = ({ headers, entities, pageState, rowsState, showUpdateModal, converters, identifier }) => {
+const BaseTable = ({ headers, entities, pageState, rowsState, showUpdateModal, converters, identifier, readOnly }) => {
   const classes = useStyles();
   const innerConverters = converters ? converters : {};
   return (
@@ -40,7 +39,7 @@ const BaseTable = ({ headers, entities, pageState, rowsState, showUpdateModal, c
           </TableHead>
           <TableBody>
             {entities.slice(pageState * rowsState, pageState * rowsState + rowsState).map((entity, entityIndex) => (
-              <TableRow onClick={() => showUpdateModal(entity)} className={classes.tableRow} key={'r' + identifier + entityIndex}>
+              <TableRow onClick={() => showUpdateModal(entity)} style={{cursor: readOnly ? 'default' : 'pointer'}} className={classes.tableRow} key={'r' + identifier + entityIndex}>
                 <TableCell>{entity[headers[0]]}</TableCell>
                 { 
                   headers.slice(1)

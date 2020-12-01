@@ -38,7 +38,7 @@ const useStyle = makeStyles(theme => ({
   },
 }));
 
-function returnByStatusState (statusState, entities, headers, pageState, rowsState, showUpdateModal, converters, identifier) {
+function returnByStatusState (statusState, entities, headers, pageState, rowsState, showUpdateModal, converters, identifier, readOnly) {
   switch (statusState) {
     case 'fetching':
       return (
@@ -58,6 +58,7 @@ function returnByStatusState (statusState, entities, headers, pageState, rowsSta
             showUpdateModal={showUpdateModal}
             converters={converters}
             identifier={identifier}
+            readOnly={readOnly}
           />
         );
       }
@@ -120,14 +121,17 @@ const RegisterList = ({ headers, title, form, converters, readOnly, baseUrl, ide
   const [entities, setEntities] = useState([]);
 
   useEffect(() => {
+    statusDispatch('fetching');
     getEntities(baseUrl, setEntities, statusDispatch);
     pageDispatch(0);
   }, [baseUrl])
 
 
   const showUpdateModal = (entity) => {
-    focusedEntityDispatch(entity);
-    updateModalDispatch();
+    if (!readOnly) {
+      focusedEntityDispatch(entity);
+      updateModalDispatch();
+    }
   }
 
   return (
@@ -146,7 +150,7 @@ const RegisterList = ({ headers, title, form, converters, readOnly, baseUrl, ide
           }
         </Toolbar>
 
-        { returnByStatusState(statusState, entities, headers, pageState, rowsState, showUpdateModal, converters, identifier) }
+        { returnByStatusState(statusState, entities, headers, pageState, rowsState, showUpdateModal, converters, identifier, readOnly) }
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
