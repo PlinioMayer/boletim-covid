@@ -24,7 +24,10 @@ const dictionary =  {
   value: 'Valor',
   date: 'Data',
   id: 'ID',
-  risk_group_name: 'Grupo de Risco'
+  risk_group_name: 'Grupo de Risco',
+  number: 'Número de Telefone',
+  result: 'Resultado',
+  testtype: 'Tipo de Teste'
 };
 
 export default dictionary;

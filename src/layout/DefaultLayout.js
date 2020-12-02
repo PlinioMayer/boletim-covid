@@ -142,21 +142,11 @@ const menuItems = [
     icon: <ErrorIcon />,
     url: 'pessoas-em-risco'
   },
-  // {
-  //   text: 'Leitos',
-  //   icon: <AirlineSeatFlatIcon />,
-  //   url: 'leitos'
-  // },
   {
     text: 'Testes',
     icon: <ExposureIcon />,
     url: '/testes'
-  },
-  // {
-  //   text: 'Médicos',
-  //   icon: <AssignmentIndIcon />,
-  //   url: '/medicos'
-  // }
+  }
 ];
 
 export default function MiniDrawer(props) {

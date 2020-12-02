@@ -6,7 +6,7 @@ import {
 
 import { Home, RegisterList } from './views';
 import { DefaultLayout } from './layout';
-import { PeopleForm, HealthCentersForm, RiskGroupsForm, PeopleRiskGroupsForm } from 'components/forms';
+import { PeopleForm, HealthCentersForm, RiskGroupsForm, PeopleRiskGroupsForm, PhonesForm, TestsForm } from 'components/forms';
 import { EmergencialSupportsForm } from './components/forms';
 
 const riskGroupHeaders = [
@@ -33,6 +33,14 @@ const peopleRiskGroupsHeaders = [
   'person_name', 'risk_group_name'
 ]
 
+const phonesHeaders = [
+  'person_name', 'number'
+]
+
+const testsHeaders = [
+  'person_name', 'testtype', 'result'
+]
+
 const peopleConverters = {
   birthdate: (value) => {
     if (typeof value !== 'string') {
@@ -40,6 +48,12 @@ const peopleConverters = {
     }
 
     return value.split('-').reverse().join('/');
+  }
+}
+
+const testsConverters = {
+  result: (value) => {
+    return value ? 'Positivo' : 'Negativo';
   }
 }
 
@@ -120,6 +134,27 @@ function App() {
               form={ PeopleRiskGroupsForm }
               baseUrl="people_risk_groups"
               identifier="prg"
+            />
+          </Route>
+
+          <Route path="/telefones">
+            <RegisterList
+              headers={ phonesHeaders }
+              title="Telefones"
+              form={ PhonesForm }
+              baseUrl="phones"
+              identifier="ph"
+            />
+          </Route>
+
+          <Route path="/testes">
+            <RegisterList
+              headers={ testsHeaders }
+              title="Testes"
+              form={ TestsForm }
+              baseUrl="tests"
+              identifier="tt"
+              converters={testsConverters}
             />
           </Route>
         </Switch>
