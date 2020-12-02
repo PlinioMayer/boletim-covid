@@ -11,7 +11,7 @@ function moneyValidator(string) {
 }
 
 function notNull(string) {
-  return string ? true : false;
+  return string === '' || string === null  ? false : true;
 }
 
 export { onlyNumbers, notNull, moneyValidator };
